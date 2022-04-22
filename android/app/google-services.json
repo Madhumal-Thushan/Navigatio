@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "708637234060",
+    "project_id": "navigatio-df99d",
+    "storage_bucket": "navigatio-df99d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:708637234060:android:786f5e90e6a9ecb49bbca9",
+        "android_client_info": {
+          "package_name": "mthushan.navigatio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "708637234060-6achcsl649tvrq1i6200tgu1aq1vd9a2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD29MCU3kzn3gl_lRb_tjKVbifmYS1-RUs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "708637234060-6achcsl649tvrq1i6200tgu1aq1vd9a2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
