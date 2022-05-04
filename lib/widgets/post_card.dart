@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:navigatio/providers/user_provider.dart';
+import 'package:navigatio/resources/firestore_methods.dart';
+import 'package:navigatio/screens/comment_screen.dart';
 import 'package:navigatio/utils/colors.dart';
+import 'package:navigatio/utils/utils.dart';
 import 'package:navigatio/widgets/like_animation.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +25,27 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   bool isLikeAnimating = false;
+  int commentLen = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getComments();
+  }
+
+  void getComments() async {
+    try {
+      QuerySnapshot snap = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.snap['postId'])
+          .collection('comments')
+          .get();
+      commentLen = snap.docs.length;
+    } catch (e) {
+      showSnackBar(e.toString(), context);
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +121,9 @@ class _PostCardState extends State<PostCard> {
             // IMAGE SECTION
           ),
           GestureDetector(
-            onDoubleTap: () {
+            onDoubleTap: () async {
+              await FirestoreMethods().likePost(
+                  widget.snap['postId'], user.uid, widget.snap['likes']);
               setState(() {
                 isLikeAnimating = false;
               });
@@ -119,10 +146,12 @@ class _PostCardState extends State<PostCard> {
                     child: const Icon(
                       Icons.thumb_up,
                       color: Colors.white,
-                      size: 120,
+                      size: 100,
                     ),
                     isAnimating: isLikeAnimating,
-                    duration: const Duration(milliseconds: 400),
+                    duration: const Duration(
+                      milliseconds: 400,
+                    ),
                     onEnd: () {
                       setState(
                         () {
@@ -143,13 +172,28 @@ class _PostCardState extends State<PostCard> {
                 isAnimating: widget.snap['likes'].contains(user.uid),
                 smallLike: true,
                 child: IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.thumb_up),
-                  color: Color(0xFF46B7F1),
+                  onPressed: () async {
+                    await FirestoreMethods().likePost(
+                        widget.snap['postId'], user.uid, widget.snap['likes']);
+                  },
+                  icon: widget.snap['likes'].contains(user.uid)
+                      ? Icon(
+                          Icons.thumb_up,
+                          color: Color(0xFF46B7F1),
+                        )
+                      : const Icon(
+                          Icons.thumb_up,
+                        ),
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CommentsScreen(
+                      snap: widget.snap,
+                    ),
+                  ),
+                ),
                 icon: Icon(Icons.comment_bank_outlined),
               ),
               IconButton(
@@ -198,7 +242,7 @@ class _PostCardState extends State<PostCard> {
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 4),
                     child: Text(
-                      "View All 200 comments",
+                      "View All $commentLen comments",
                       style:
                           const TextStyle(fontSize: 16, color: secondaryColor),
                     ),
