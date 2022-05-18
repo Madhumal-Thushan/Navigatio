@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:navigatio/resources/auth_methods.dart';
@@ -11,6 +12,7 @@ import '../responsive/responsice_layout.dart';
 import '../responsive/web_screen_layout.dart';
 import '../utils/colors.dart';
 import '../widgets/text_field_input.dart';
+import 'landing_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -26,6 +28,15 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _usernameController = TextEditingController();
   Uint8List? _image;
   bool _isLoading = false;
+
+  var options = [
+    'Hiker',
+    'Event Organizer',
+    'Camping Gear Seller',
+  ];
+
+  var _currentItemSelected = "Hiker";
+  var role = "Hiker";
 
   @override
   void dispose() {
@@ -52,6 +63,7 @@ class _SignupScreenState extends State<SignupScreen> {
       password: _passController.text,
       username: _usernameController.text,
       bio: _bioController.text,
+      role: _currentItemSelected,
       file: _image!,
     );
     setState(() {
@@ -83,12 +95,26 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          width: double.infinity,
+      appBar: AppBar(
+        backgroundColor: mobileBackgroundColor,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pushReplacement(
+              CupertinoPageRoute(
+                builder: (_) => LandingScreen(),
+              ),
+            );
+          },
+        ),
+      ),
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        width: double.infinity,
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Flexible(
                 child: Container(),
@@ -100,7 +126,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 height: 64,
               ),
               SizedBox(
-                height: 64,
+                height: 30,
               ),
               //input photos from gallery
               Stack(
@@ -125,7 +151,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ],
               ),
-              const SizedBox(
+              SizedBox(
                 height: 24,
               ),
               //username input
@@ -135,7 +161,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   textInputType: TextInputType.text),
 
               //email input
-              const SizedBox(
+              SizedBox(
                 height: 24,
               ),
               TextFeildInput(
@@ -161,6 +187,50 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(
                 height: 24,
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Sign in As : ",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  DropdownButton<String>(
+                    dropdownColor: blueColor,
+                    isDense: true,
+                    isExpanded: false,
+                    iconEnabledColor: Colors.white,
+                    focusColor: Colors.white,
+                    items: options.map((String dropDownStringItem) {
+                      return DropdownMenuItem<String>(
+                        value: dropDownStringItem,
+                        child: Text(
+                          dropDownStringItem,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (newValueSelected) {
+                      setState(() {
+                        _currentItemSelected = newValueSelected!;
+                        role = newValueSelected;
+                      });
+                    },
+                    value: _currentItemSelected,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 24,
+              ),
+
               //button
               InkWell(
                 onTap: signUpUser,

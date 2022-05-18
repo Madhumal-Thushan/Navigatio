@@ -26,6 +26,7 @@ class AuthMethod {
     required String password,
     required String username,
     required String bio,
+    required String role,
     required Uint8List file,
   }) async {
     String res = "some error comes up ";
@@ -51,6 +52,7 @@ class AuthMethod {
           photoUrl: photoUrl,
           email: email,
           bio: bio,
+          role: role,
           followers: [],
           following: [],
         );

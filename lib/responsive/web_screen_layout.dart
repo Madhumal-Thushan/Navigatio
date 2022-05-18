@@ -1,14 +1,82 @@
 import 'package:flutter/material.dart';
 
-class WebScreenLayout extends StatelessWidget {
+import '../utils/colors.dart';
+import '../utils/globle_variables.dart';
+
+class WebScreenLayout extends StatefulWidget {
   const WebScreenLayout({Key? key}) : super(key: key);
+
+  @override
+  State<WebScreenLayout> createState() => _WebScreenLayoutState();
+}
+
+class _WebScreenLayoutState extends State<WebScreenLayout> {
+  int _page = 0;
+  late PageController pageController; // for tabs animation
+
+  @override
+  void initState() {
+    super.initState();
+    pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    pageController.dispose();
+  }
+
+  void onPageChanged(int page) {
+    setState(() {
+      _page = page;
+    });
+  }
+
+  void navigationTapped(int page) {
+    //Animating Page
+    pageController.jumpToPage(page);
+    setState(() {
+      _page = page;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text("this is Web"),
-      ),
-    );
+        appBar: AppBar(
+          backgroundColor: mobileBackgroundColor,
+          centerTitle: false,
+          title: Image(
+            image: AssetImage('assets/navigatio5.png'),
+            height: 32,
+          ),
+          actions: [
+            IconButton(
+              onPressed: () => navigationTapped(0),
+              icon: Icon(Icons.home),
+            ),
+            IconButton(
+              onPressed: () => navigationTapped(1),
+              icon: Icon(Icons.search),
+            ),
+            IconButton(
+              onPressed: () => navigationTapped(2),
+              icon: Icon(Icons.add_a_photo),
+            ),
+            IconButton(
+              onPressed: () => navigationTapped(3),
+              icon: Icon(Icons.notification_add),
+            ),
+            IconButton(
+              onPressed: () => navigationTapped(4),
+              icon: Icon(Icons.person),
+            )
+          ],
+        ),
+        body: PageView(
+          children: HomeScreenItems,
+          controller: pageController,
+          onPageChanged: onPageChanged,
+        ));
   }
 }

@@ -6,6 +6,7 @@ import 'package:navigatio/providers/user_provider.dart';
 import 'package:navigatio/responsive/mobile_screen_layout.dart';
 import 'package:navigatio/responsive/responsice_layout.dart';
 import 'package:navigatio/responsive/web_screen_layout.dart';
+import 'package:navigatio/screens/landing_screen.dart';
 import 'package:navigatio/screens/login_screen.dart';
 import 'package:navigatio/screens/signup_screen.dart';
 import 'package:navigatio/utils/colors.dart';
@@ -67,7 +68,7 @@ class MyApp extends StatelessWidget {
                   ),
                 );
               }
-              return const LoginScreen();
+              return LandingScreen();
             }),
       ),
     );

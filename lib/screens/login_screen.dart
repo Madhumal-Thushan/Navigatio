@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:navigatio/resources/auth_methods.dart';
+import 'package:navigatio/screens/landing_screen.dart';
 import 'package:navigatio/screens/signup_screen.dart';
 import 'package:navigatio/utils/colors.dart';
+import 'package:navigatio/utils/globle_variables.dart';
 import 'package:navigatio/utils/utils.dart';
 import 'package:navigatio/widgets/text_field_input.dart';
 
@@ -33,7 +36,9 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = true;
     });
     String res = await AuthMethod().loginUser(
-        email: _emailController.text, password: _passController.text);
+      email: _emailController.text,
+      password: _passController.text,
+    );
     if (res == "success") {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -62,9 +67,25 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: mobileBackgroundColor,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pushReplacement(
+              CupertinoPageRoute(
+                builder: (_) => LandingScreen(),
+              ),
+            );
+          },
+        ),
+      ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
+          padding: MediaQuery.of(context).size.width > webScreenSize
+              ? EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width / 3)
+              : const EdgeInsets.symmetric(horizontal: 32),
           width: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

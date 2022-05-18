@@ -13,6 +13,5 @@ List<Widget> HomeScreenItems = [
   FeedScreen(),
   SearchScreen(),
   AddPostScreen(),
-  Text("Notifi"),
   ProfileScreen(uid: FirebaseAuth.instance.currentUser!.uid)
 ];
