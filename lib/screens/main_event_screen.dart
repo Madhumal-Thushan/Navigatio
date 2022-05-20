@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:navigatio/screens/camping_gear_screen.dart';
 import 'package:navigatio/screens/event_screen.dart';
-import 'package:navigatio/screens/map_show_screen.dart';
+import 'package:navigatio/screens/map_screen.dart';
 import 'package:navigatio/screens/profile_screen.dart';
 
 import '../utils/colors.dart';
@@ -21,6 +21,7 @@ class _MainEventScreenState extends State<MainEventScreen> {
     EventScreen(),
     MapScreen(),
     CampingGearScreen(),
+    ProfileScreen(uid: FirebaseAuth.instance.currentUser!.uid)
   ];
 
   int currentIndex = 0;
@@ -62,19 +63,6 @@ class _MainEventScreenState extends State<MainEventScreen> {
             label: 'profile',
           ),
         ],
-      ),
-      appBar: AppBar(
-        backgroundColor: mobileBackgroundColor,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pushReplacement(
-              CupertinoPageRoute(
-                builder: (_) => LandingScreen(),
-              ),
-            );
-          },
-        ),
       ),
     );
   }

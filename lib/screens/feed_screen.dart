@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:navigatio/screens/landing_screen.dart';
 import 'package:navigatio/screens/login_screen.dart';
 import 'package:navigatio/utils/colors.dart';
 import 'package:navigatio/widgets/post_card.dart';
@@ -19,7 +20,7 @@ class FeedScreen extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pushReplacement(
               CupertinoPageRoute(
-                builder: (_) => LoginScreen(),
+                builder: (_) => LandingScreen(),
               ),
             );
           },

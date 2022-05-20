@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:navigatio/models/post.dart';
 import 'package:navigatio/resources/storage_methods.dart';
 import 'package:uuid/uuid.dart';
+import 'package:navigatio/models/event.dart';
 
 class FirestoreMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -18,8 +19,8 @@ class FirestoreMethods {
   ) async {
     String res = "some error comes up";
     try {
-      String photoUrl =
-          await StorageMethods().uploadImageToStorage('Posts', file, true);
+      String photoUrl = await StorageMethods()
+          .uploadImageToStorage('Posts', file, true, false);
 
       String postId = const Uuid().v1();
 
@@ -35,6 +36,40 @@ class FirestoreMethods {
       );
       _firestore.collection('posts').doc(postId).set(
             post.toJson(),
+          );
+      res = "success";
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
+  Future<String> uploadEvent(
+    String discription,
+    Uint8List file,
+    String uid,
+    String username,
+    String profImage,
+  ) async {
+    String res = "some error comes up";
+    try {
+      String photoUrl = await StorageMethods()
+          .uploadImageToStorage('Events', file, false, true);
+
+      String eventId = const Uuid().v1();
+
+      Event event = Event(
+        discription: discription,
+        uid: uid,
+        username: username,
+        eventId: eventId,
+        datePublished: DateTime.now(),
+        postUrl: photoUrl,
+        profImage: profImage,
+        likes: [],
+      );
+      _firestore.collection('posts').doc(eventId).set(
+            event.toJson(),
           );
       res = "success";
     } catch (err) {

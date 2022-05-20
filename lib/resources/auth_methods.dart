@@ -42,7 +42,7 @@ class AuthMethod {
         print(cred.user!.uid);
 
         String photoUrl = await StorageMethods()
-            .uploadImageToStorage('profilePic', file, false);
+            .uploadImageToStorage('profilePic', file, false, false);
 
         // add user to database
 
