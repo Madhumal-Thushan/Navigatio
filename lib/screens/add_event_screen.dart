@@ -1,10 +1,12 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:navigatio/providers/user_provider.dart';
 import 'package:navigatio/resources/firestore_methods.dart';
 import 'package:navigatio/screens/event_screen.dart';
+import 'package:navigatio/screens/main_event_screen.dart';
 import 'package:navigatio/utils/colors.dart';
 import 'package:navigatio/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -104,7 +106,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => EventScreen(),
+          builder: (context) => MainEventScreen(),
         ),
       );
     });
@@ -142,7 +144,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
           ),
         ],
       ),
-      body: Column(
+      body: ListView(
         children: [
           _isLoading
               ? const LinearProgressIndicator()
@@ -165,7 +167,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     hintText: 'Write about your Event',
                     border: InputBorder.none,
                   ),
-                  maxLines: 30,
+                  maxLines: 3,
                 ),
               ),
               IconButton(
@@ -173,26 +175,47 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 onPressed: () => _selectImage(context),
                 icon: Icon(Icons.add_a_photo),
               ),
-
-              // SizedBox(
-              //   height: 45,
-              //   width: 45,
-              //   child: AspectRatio(
-              //     aspectRatio: 487 / 451,
-              //     child: Container(
-              //       decoration: BoxDecoration(
-              //         image: DecorationImage(
-              //             image: MemoryImage(_file!),
-              //             fit: BoxFit.fill,
-              //             alignment: FractionalOffset.topCenter),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              const Divider(),
             ],
           ),
-          const Divider(),
+          Divider(),
+          _file == null
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    height: 200,
+                    width: 100,
+                    child: AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: NetworkImage(
+                                  'https://thumbs.dreamstime.com/b/no-image-available-icon-photo-camera-flat-vector-illustration-132483141.jpg'),
+                              fit: BoxFit.fill,
+                              alignment: FractionalOffset.topCenter),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    height: 200,
+                    width: 100,
+                    child: AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: MemoryImage(_file!),
+                              fit: BoxFit.fill,
+                              alignment: FractionalOffset.topCenter),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
         ],
       ),
     );

@@ -68,7 +68,7 @@ class FirestoreMethods {
         profImage: profImage,
         likes: [],
       );
-      _firestore.collection('posts').doc(eventId).set(
+      _firestore.collection('events').doc(eventId).set(
             event.toJson(),
           );
       res = "success";
