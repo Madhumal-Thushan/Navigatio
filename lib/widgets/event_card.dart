@@ -11,19 +11,20 @@ import 'package:navigatio/widgets/like_animation.dart';
 import 'package:provider/provider.dart';
 
 import '../models/user.dart';
+import '../screens/event_comment_screen.dart';
 
-class PostCard extends StatefulWidget {
+class EventCard extends StatefulWidget {
   final snap;
-  const PostCard({
+  const EventCard({
     Key? key,
     required this.snap,
   }) : super(key: key);
 
   @override
-  State<PostCard> createState() => _PostCardState();
+  State<EventCard> createState() => _EventCardState();
 }
 
-class _PostCardState extends State<PostCard> {
+class _EventCardState extends State<EventCard> {
   bool isLikeAnimating = false;
   int commentLen = 0;
 
@@ -36,8 +37,8 @@ class _PostCardState extends State<PostCard> {
   void getComments() async {
     try {
       QuerySnapshot snap = await FirebaseFirestore.instance
-          .collection('posts')
-          .doc(widget.snap['postId'])
+          .collection('events')
+          .doc(widget.snap['eventId'])
           .collection('comments')
           .get();
       commentLen = snap.docs.length;
@@ -101,7 +102,7 @@ class _PostCardState extends State<PostCard> {
                                 (e) => InkWell(
                                   onTap: () async {
                                     FirestoreMethods()
-                                        .deletePost(widget.snap['postId']);
+                                        .deleteEvent(widget.snap['eventId']);
                                     Navigator.of(context).pop();
                                   },
                                   child: Container(
@@ -126,8 +127,8 @@ class _PostCardState extends State<PostCard> {
           ),
           GestureDetector(
             onDoubleTap: () async {
-              await FirestoreMethods().likePost(
-                  widget.snap['postId'], user.uid, widget.snap['likes']);
+              await FirestoreMethods().likeEvent(
+                  widget.snap['eventId'], user.uid, widget.snap['likes']);
               setState(() {
                 isLikeAnimating = false;
               });
@@ -177,8 +178,8 @@ class _PostCardState extends State<PostCard> {
                 smallLike: true,
                 child: IconButton(
                   onPressed: () async {
-                    await FirestoreMethods().likePost(
-                        widget.snap['postId'], user.uid, widget.snap['likes']);
+                    await FirestoreMethods().likeEvent(
+                        widget.snap['eventId'], user.uid, widget.snap['likes']);
                   },
                   icon: widget.snap['likes'].contains(user.uid)
                       ? Icon(
@@ -193,16 +194,12 @@ class _PostCardState extends State<PostCard> {
               IconButton(
                 onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => CommentsScreen(
+                    builder: (context) => EventCommentsScreen(
                       snap: widget.snap,
                     ),
                   ),
                 ),
                 icon: Icon(Icons.comment_bank_outlined),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.send_rounded),
               ),
             ],
           ),

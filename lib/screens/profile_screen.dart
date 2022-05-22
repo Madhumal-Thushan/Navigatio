@@ -2,10 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:navigatio/resources/firestore_methods.dart';
+import 'package:navigatio/screens/feed_screen.dart';
 import 'package:navigatio/utils/colors.dart';
 import 'package:navigatio/utils/utils.dart';
 
 import '../resources/auth_methods.dart';
+import '../responsive/mobile_screen_layout.dart';
 import '../widgets/follow_button.dart';
 import 'login_screen.dart';
 
@@ -79,6 +81,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 userData['username'],
               ),
               centerTitle: false,
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.dynamic_feed),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MobileScreenLayout()));
+                  },
+                ),
+              ],
             ),
             body: ListView(
               children: [

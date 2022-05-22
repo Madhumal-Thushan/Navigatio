@@ -44,6 +44,7 @@ class FirestoreMethods {
     return res;
   }
 
+  //Upload Event
   Future<String> uploadEvent(
     String discription,
     Uint8List file,
@@ -78,10 +79,11 @@ class FirestoreMethods {
     return res;
   }
 
+  // Like Post
   Future<void> likePost(String postId, String uid, List likes) async {
     try {
       if (likes.contains(uid)) {
-        await _firestore.collection('posts').doc(postId).update({
+        await _firestore.collection('events').doc(postId).update({
           'likes': FieldValue.arrayRemove([uid])
         });
       } else {
@@ -96,6 +98,26 @@ class FirestoreMethods {
     }
   }
 
+  //Like Event
+  Future<void> likeEvent(String eventId, String uid, List likes) async {
+    try {
+      if (likes.contains(uid)) {
+        await _firestore.collection('events').doc(eventId).update({
+          'likes': FieldValue.arrayRemove([uid])
+        });
+      } else {
+        await _firestore.collection('events').doc(eventId).update({
+          'likes': FieldValue.arrayUnion([uid])
+        });
+      }
+    } catch (e) {
+      print(
+        e.toString(),
+      );
+    }
+  }
+
+  //Post's comment
   Future<void> postComment(String postId, String text, String uid, String name,
       String profilepic) async {
     try {
@@ -124,10 +146,48 @@ class FirestoreMethods {
     }
   }
 
+  //Event's Comment
+  Future<void> eventComment(String eventId, String text, String uid,
+      String name, String profilepic) async {
+    try {
+      if (text.isNotEmpty) {
+        String commentId = const Uuid().v1();
+        await _firestore
+            .collection('events')
+            .doc(eventId)
+            .collection('comments')
+            .doc(commentId)
+            .set({
+          'profilepic': profilepic,
+          'name': name,
+          'uid': uid,
+          'text': text,
+          'commentId': commentId,
+          'datePublished': DateTime.now(),
+        });
+      } else {
+        print("text is empty");
+      }
+    } catch (e) {
+      print(
+        e.toString(),
+      );
+    }
+  }
+
   // deleting the post
   Future<void> deletePost(String postId) async {
     try {
       await _firestore.collection('posts').doc(postId).delete();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  // deleting the Event
+  Future<void> deleteEvent(String eventId) async {
+    try {
+      await _firestore.collection('events').doc(eventId).delete();
     } catch (e) {
       print(e.toString());
     }

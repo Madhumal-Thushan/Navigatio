@@ -64,7 +64,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         context: context,
         builder: (context) {
           return SimpleDialog(
-            title: Text('Create a Post'),
+            title: Text('Add Photo About Event'),
             children: [
               SimpleDialogOption(
                 padding: const EdgeInsets.all(20),

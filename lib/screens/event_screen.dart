@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:navigatio/widgets/event_card.dart';
 
 import '../utils/colors.dart';
 import 'add_event_screen.dart';
@@ -40,8 +42,22 @@ class _EventScreenState extends State<EventScreen> {
           },
         ),
       ),
-      body: Center(
-        child: Text('Event Page'),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('events').snapshots(),
+        builder: (context,
+            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) => EventCard(
+              snap: snapshot.data!.docs[index].data(),
+            ),
+          );
+        },
       ),
     );
   }
