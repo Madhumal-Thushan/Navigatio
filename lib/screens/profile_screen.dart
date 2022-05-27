@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:navigatio/resources/firestore_methods.dart';
 import 'package:navigatio/screens/feed_screen.dart';
@@ -24,6 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int postLen = 0;
   int followers = 0;
   int following = 0;
+  int eventLen = 0;
   bool isFollowing = false;
   bool isLoading = false;
 
@@ -49,7 +51,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .get();
 
+      var eventSnap = await FirebaseFirestore.instance
+          .collection('events')
+          .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
       postLen = postSnap.docs.length;
+      eventLen = eventSnap.docs.length;
       userData = userSnap.data()!;
       followers = userSnap.data()!['followers'].length;
       following = userSnap.data()!['following'].length;
@@ -101,12 +109,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       Row(
                         children: [
-                          CircleAvatar(
-                            backgroundColor: Colors.grey,
-                            backgroundImage: NetworkImage(
-                              userData['photoUrl'],
+                          ClipRRect(
+                            child: Container(
+                              height: 90,
+                              width: 70,
+                              child: Image.network(
+                                userData['photoUrl'],
+                              ),
                             ),
-                            radius: 40,
+                            borderRadius: BorderRadius.circular(70.0),
                           ),
                           Expanded(
                             flex: 1,
@@ -117,9 +128,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    buildStatColumn(postLen, "posts"),
-                                    buildStatColumn(followers, "followers"),
-                                    buildStatColumn(following, "following"),
+                                    buildStatColumn(postLen, "Posts"),
+                                    buildStatColumn(eventLen, "Events"),
+                                    buildStatColumn(following, "Following"),
+                                    buildStatColumn(following, "Following"),
                                   ],
                                 ),
                                 Row(
@@ -215,7 +227,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-                const Divider(),
+                Divider(),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8, left: 4),
+                  child: const Text(
+                    'Posts',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const Divider(
+                  thickness: 5,
+                ),
                 FutureBuilder(
                   future: FirebaseFirestore.instance
                       .collection('posts')
@@ -251,7 +273,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       },
                     );
                   },
-                )
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8, left: 4),
+                  child: const Text(
+                    'Events',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Divider(
+                  thickness: 5,
+                ),
+                FutureBuilder(
+                  future: FirebaseFirestore.instance
+                      .collection('events')
+                      .where('uid', isEqualTo: widget.uid)
+                      .get(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      itemCount: (snapshot.data! as dynamic).docs.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 5,
+                        mainAxisSpacing: 1.5,
+                        childAspectRatio: 1,
+                      ),
+                      itemBuilder: (context, index) {
+                        DocumentSnapshot snap =
+                            (snapshot.data! as dynamic).docs[index];
+
+                        return Container(
+                          child: Image(
+                            image: NetworkImage(snap['postUrl']),
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
               ],
             ),
           );
@@ -276,7 +344,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             style: const TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w400,
-              color: Colors.grey,
+              color: Colors.white,
             ),
           ),
         ),

@@ -5,6 +5,7 @@ import 'package:navigatio/models/post.dart';
 import 'package:navigatio/resources/storage_methods.dart';
 import 'package:uuid/uuid.dart';
 import 'package:navigatio/models/event.dart';
+import 'package:navigatio/models/gear.dart';
 
 class FirestoreMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -20,7 +21,7 @@ class FirestoreMethods {
     String res = "some error comes up";
     try {
       String photoUrl = await StorageMethods()
-          .uploadImageToStorage('Posts', file, true, false);
+          .uploadImageToStorage('Posts', file, true, false, false);
 
       String postId = const Uuid().v1();
 
@@ -55,7 +56,7 @@ class FirestoreMethods {
     String res = "some error comes up";
     try {
       String photoUrl = await StorageMethods()
-          .uploadImageToStorage('Events', file, false, true);
+          .uploadImageToStorage('Events', file, false, true, false);
 
       String eventId = const Uuid().v1();
 
@@ -79,11 +80,47 @@ class FirestoreMethods {
     return res;
   }
 
+  Future<String> uploadCampingItem(
+    String discription,
+    String name,
+    Uint8List file,
+    String uid,
+    String username,
+    String profImage,
+  ) async {
+    String res = "some error comes up";
+    try {
+      String photoUrl = await StorageMethods()
+          .uploadImageToStorage('CampingGears', file, false, false, true);
+
+      String gearId = const Uuid().v1();
+
+      CampingGear gear = CampingGear(
+        discription: discription,
+        name: name,
+        uid: uid,
+        username: username,
+        datePublished: DateTime.now(),
+        postUrl: photoUrl,
+        profImage: profImage,
+        likes: [],
+        gearId: gearId,
+      );
+      _firestore.collection('camping gears').doc(gearId).set(
+            gear.toJson(),
+          );
+      res = "success";
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
   // Like Post
   Future<void> likePost(String postId, String uid, List likes) async {
     try {
       if (likes.contains(uid)) {
-        await _firestore.collection('events').doc(postId).update({
+        await _firestore.collection('posts').doc(postId).update({
           'likes': FieldValue.arrayRemove([uid])
         });
       } else {
@@ -107,6 +144,24 @@ class FirestoreMethods {
         });
       } else {
         await _firestore.collection('events').doc(eventId).update({
+          'likes': FieldValue.arrayUnion([uid])
+        });
+      }
+    } catch (e) {
+      print(
+        e.toString(),
+      );
+    }
+  }
+
+  Future<void> likeItems(String itemId, String uid, List likes) async {
+    try {
+      if (likes.contains(uid)) {
+        await _firestore.collection('camping gears').doc(itemId).update({
+          'likes': FieldValue.arrayRemove([uid])
+        });
+      } else {
+        await _firestore.collection('camping gears').doc(itemId).update({
           'likes': FieldValue.arrayUnion([uid])
         });
       }

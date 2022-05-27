@@ -41,7 +41,7 @@ class _MainEventScreenState extends State<MainEventScreen> {
         onTap: onTap,
         currentIndex: currentIndex,
         selectedItemColor: blueColor,
-        unselectedItemColor: Colors.grey.withOpacity(0.5),
+        unselectedItemColor: Colors.white,
         showSelectedLabels: false,
         showUnselectedLabels: false,
         elevation: 0,
