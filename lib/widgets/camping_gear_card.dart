@@ -164,19 +164,19 @@ class _GearItemCardState extends State<GearItemCard> {
                             ),
                           ),
                           Expanded(
-                            child: Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 4, 8, 0),
-                              child: Text(
-                                '${widget.snap['discription']}',
-                                textAlign: TextAlign.start,
-                                style: GoogleFonts.lexendDeca(
-                                  textStyle : TextStyle(
-                                    color: Color(0xFF57636C),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                )
+                            child: SingleChildScrollView(
+                              child: Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 4, 8, 0),
+                                child: Text('${widget.snap['discription']}',
+                                    textAlign: TextAlign.start,
+                                    style: GoogleFonts.lexendDeca(
+                                      textStyle: TextStyle(
+                                        color: Color(0xFF57636C),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    )),
                               ),
                             ),
                           ),
@@ -203,21 +203,21 @@ class _GearItemCardState extends State<GearItemCard> {
                         isAnimating: widget.snap['likes'].contains(user.uid),
                         smallLike: true,
                         child: IconButton(
-                          icon: widget.snap['likes'].contains(user.uid)
-                              ? Icon(
-                                  Icons.thumb_up,
-                                  color: Color(0xFF46B7F1),
-                                )
-                              : const Icon(
-                                  Icons.thumb_up,
-                                ),
-                          color: Colors.black,
                           onPressed: () async {
-                            await FirestoreMethods().likeItems(
-                                widget.snap['itemId'],
+                            await FirestoreMethods().likeItem(
+                                widget.snap['gearId'],
                                 user.uid,
                                 widget.snap['likes']);
                           },
+                          icon: widget.snap['likes'].contains(user.uid)
+                              ? Icon(
+                                  Icons.thumb_up,
+                                  color: Colors.black,
+                                )
+                              : const Icon(
+                                  Icons.thumb_up_outlined,
+                                  color: Colors.black,
+                                ),
                         ),
                       ),
                       Text(
@@ -230,130 +230,6 @@ class _GearItemCardState extends State<GearItemCard> {
               ),
             ),
           )
-          // Container(
-          //   height: 150,
-          //   color: Colors.white,
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.start,
-          //     children: [
-          //       SizedBox(
-          //         child: Image.network(
-          //           widget.snap['postUrl'],
-          //           fit: BoxFit.cover,
-          //         ),
-          //       ),
-          //       Column(
-          //         children: [
-          //           RichText(
-          //             text: TextSpan(
-          //               style: TextStyle(color: primaryColor),
-          //               children: [
-          //                 TextSpan(
-          //                   text: widget.snap['name'],
-          //                   style: const TextStyle(
-          //                     fontWeight: FontWeight.bold,
-          //                     color: Colors.black,
-          //                   ),
-          //                 ),
-          //                 TextSpan(
-          //                   style: TextStyle(
-          //                     fontWeight: FontWeight.bold,
-          //                     color: Colors.black,
-          //                   ),
-          //                   text: '${widget.snap['discription']}',
-          //                 ),
-          //               ],
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ],
-          //   ),
-          // ),
-          // Container(
-          //   color: Colors.white,
-          //   height: 100,
-          //   child: Row(
-          //     mainAxisSize: MainAxisSize.max,
-          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //     crossAxisAlignment: CrossAxisAlignment.stretch,
-          //     children: [
-          //       Container(
-          //         child: Image.network(
-          //           widget.snap['postUrl'],
-          //           fit: BoxFit.cover,
-          //         ),
-          //       ),
-          //       Container(
-          //         width: double.infinity,
-          //         padding: const EdgeInsets.only(top: 8),
-          //         child: RichText(
-          //           text: TextSpan(
-          //             style: TextStyle(color: primaryColor),
-          //             children: [
-          //               TextSpan(
-          //                 text: '${widget.snap['discription']}',
-          //               ),
-          //             ],
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
-
-          // LIKE COMMENT SECTION
-          // Row(
-          //   children: [
-          //     LikeAnimation(
-          //       isAnimating: widget.snap['likes'].contains(user.uid),
-          //       smallLike: true,
-          //       child: IconButton(
-          //         onPressed: () async {
-          //           await FirestoreMethods().likeItems(
-          //               widget.snap['itemId'], user.uid, widget.snap['likes']);
-          //         },
-          //         icon: widget.snap['likes'].contains(user.uid)
-          //             ? Icon(
-          //                 Icons.thumb_up,
-          //                 color: Color(0xFF46B7F1),
-          //               )
-          //             : const Icon(
-          //                 Icons.thumb_up,
-          //               ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // DESCRIPTION and COMMENT
-          // Container(
-          //   padding: const EdgeInsets.symmetric(horizontal: 16),
-          //   child: Column(
-          //     mainAxisSize: MainAxisSize.min,
-          //     crossAxisAlignment: CrossAxisAlignment.start,
-          //     children: [
-          //       DefaultTextStyle(
-          //         style: Theme.of(context)
-          //             .textTheme
-          //             .subtitle2!
-          //             .copyWith(fontWeight: FontWeight.w800),
-          //         child: Text(
-          //           '${widget.snap['likes'].length} likes',
-          //           style: Theme.of(context).textTheme.bodyText2,
-          //         ),
-          //       ),
-          //       Container(
-          //         padding: EdgeInsets.symmetric(vertical: 4),
-          //         child: Text(
-          //           DateFormat.yMMMd().format(
-          //             widget.snap['datePublished'].toDate(),
-          //           ),
-          //           style: const TextStyle(fontSize: 16, color: secondaryColor),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // )
         ],
       ),
     );

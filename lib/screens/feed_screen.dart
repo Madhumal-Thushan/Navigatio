@@ -29,12 +29,6 @@ class FeedScreen extends StatelessWidget {
           image: AssetImage('assets/navigatio5.png'),
           height: 32,
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.chat),
-          )
-        ],
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('posts').snapshots(),

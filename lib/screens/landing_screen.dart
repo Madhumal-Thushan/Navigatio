@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:navigatio/screens/main_event_screen.dart';
@@ -5,6 +7,8 @@ import 'package:navigatio/screens/login_screen.dart';
 import 'package:navigatio/screens/signup_screen.dart';
 import 'package:navigatio/utils/colors.dart';
 import 'package:slidable_button/slidable_button.dart';
+
+import '../utils/utils.dart';
 
 class LandingScreen extends StatefulWidget {
   @override
@@ -51,11 +55,17 @@ class _LandingState extends State<LandingScreen> {
               dismissible: false,
               label: Center(child: Text('Events')),
               onChanged: (SlidableButtonPosition value) {
-                Navigator.of(context).pushReplacement(
-                  CupertinoPageRoute(
-                    builder: (_) => MainEventScreen(),
-                  ),
-                );
+                FirebaseAuth.instance.currentUser == null
+                    ? Navigator.of(context).pushReplacement(
+                        CupertinoPageRoute(
+                          builder: (_) => LoginScreen(),
+                        ),
+                      )
+                    : Navigator.of(context).pushReplacement(
+                        CupertinoPageRoute(
+                          builder: (_) => MainEventScreen(),
+                        ),
+                      );
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),

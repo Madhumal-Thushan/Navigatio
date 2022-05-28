@@ -200,10 +200,6 @@ class _PostCardState extends State<PostCard> {
                 ),
                 icon: Icon(Icons.comment_bank_outlined),
               ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.send_rounded),
-              ),
             ],
           ),
           // DESCRIPTION and COMMENT

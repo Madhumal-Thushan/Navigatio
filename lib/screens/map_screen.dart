@@ -134,7 +134,7 @@ class _MapScreenState extends State<MapScreen> {
         GoogleMap(
           markers: _markers,
           initialCameraPosition: CameraPosition(
-            target: LatLng(21.1458, 79.2882),
+            target: LatLng(7.8731, 80.7718),
             zoom: 11.0,
           ),
           myLocationEnabled: true,

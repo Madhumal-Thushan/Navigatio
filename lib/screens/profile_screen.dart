@@ -102,6 +102,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
             body: ListView(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16),
@@ -109,15 +111,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       Row(
                         children: [
-                          ClipRRect(
-                            child: Container(
-                              height: 90,
-                              width: 70,
-                              child: Image.network(
-                                userData['photoUrl'],
-                              ),
+                          CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            backgroundImage: NetworkImage(
+                              userData['photoUrl'],
                             ),
-                            borderRadius: BorderRadius.circular(70.0),
+                            radius: 40,
                           ),
                           Expanded(
                             flex: 1,
@@ -130,7 +129,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   children: [
                                     buildStatColumn(postLen, "Posts"),
                                     buildStatColumn(eventLen, "Events"),
-                                    buildStatColumn(following, "Following"),
+                                    buildStatColumn(followers, "Followers"),
                                     buildStatColumn(following, "Following"),
                                   ],
                                 ),
@@ -218,7 +217,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Container(
                         alignment: Alignment.centerLeft,
                         padding: const EdgeInsets.only(
-                          top: 1,
+                          top: 2,
+                        ),
+                        child: Text(
+                          userData['role'],
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.only(
+                          top: 10,
                         ),
                         child: Text(
                           userData['bio'],
@@ -287,6 +298,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 FutureBuilder(
                   future: FirebaseFirestore.instance
                       .collection('events')
+                      .where('uid', isEqualTo: widget.uid)
+                      .get(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      itemCount: (snapshot.data! as dynamic).docs.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 5,
+                        mainAxisSpacing: 1.5,
+                        childAspectRatio: 1,
+                      ),
+                      itemBuilder: (context, index) {
+                        DocumentSnapshot snap =
+                            (snapshot.data! as dynamic).docs[index];
+
+                        return Container(
+                          child: Image(
+                            image: NetworkImage(snap['postUrl']),
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8, left: 4),
+                  child: const Text(
+                    'Items',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Divider(
+                  thickness: 5,
+                ),
+                FutureBuilder(
+                  future: FirebaseFirestore.instance
+                      .collection('camping gear')
                       .where('uid', isEqualTo: widget.uid)
                       .get(),
                   builder: (context, snapshot) {

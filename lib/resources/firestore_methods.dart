@@ -154,14 +154,14 @@ class FirestoreMethods {
     }
   }
 
-  Future<void> likeItems(String itemId, String uid, List likes) async {
+  Future<void> likeItem(String gearId, String uid, List likes) async {
     try {
       if (likes.contains(uid)) {
-        await _firestore.collection('camping gears').doc(itemId).update({
+        await _firestore.collection('camping gears').doc(gearId).update({
           'likes': FieldValue.arrayRemove([uid])
         });
       } else {
-        await _firestore.collection('camping gears').doc(itemId).update({
+        await _firestore.collection('camping gears').doc(gearId).update({
           'likes': FieldValue.arrayUnion([uid])
         });
       }

@@ -2,7 +2,7 @@
     package="mthushan.navigatio">
    <application
         android:requestLegacyExternalStorage="true"
-        android:label="navigatio"
+        android:label="Navigatio"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
